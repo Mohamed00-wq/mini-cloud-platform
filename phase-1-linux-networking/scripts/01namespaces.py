@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-netns_manager.py - Simple network namespace manager for a mini-cloud platform.
+01namespaces.py - Simple network namespace manager for a mini-cloud platform.
 
 Wraps the `ip netns` commands you were running manually:
     sudo ip netns add ns1
