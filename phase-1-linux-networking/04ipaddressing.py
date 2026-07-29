@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ip_manager.py - Stage 3 of the mini-cloud platform: IP addressing.
+04ipaddressing.py - Stage 3 of the mini-cloud platform: IP addressing.
 
 Wraps the commands you used manually, run inside each namespace:
 
@@ -16,22 +16,22 @@ Wraps the commands you used manually, run inside each namespace:
 
 Usage:
     # Assign an IP to an interface inside a namespace
-    sudo python3 ip_manager.py assign ns1 veth1 10.0.1.1/24
+    sudo python3 04ipaddressing.py assign ns1 veth1 10.0.1.1/24
 
     # Bring an interface up inside a namespace
-    sudo python3 ip_manager.py up ns1 lo
-    sudo python3 ip_manager.py up ns1 veth1
+    sudo python3 04ipaddressing.py up ns1 lo
+    sudo python3 04ipaddressing.py up ns1 veth1
 
     # Or do all 3 steps (assign IP + bring up lo + bring up the interface) at once
-    sudo python3 ip_manager.py setup ns1 veth1 10.0.1.1/24
-    sudo python3 ip_manager.py setup ns2 veth2 10.0.1.2/24
+    sudo python3 04ipaddressing.py setup ns1 veth1 10.0.1.1/24
+    sudo python3 04ipaddressing.py setup ns2 veth2 10.0.1.2/24
 
     # Check the result
-    python3 ip_manager.py show ns1
-    python3 ip_manager.py show ns2
+    python3 04ipaddressing.py show ns1
+    python3 04ipaddressing.py show ns2
 
     # Test connectivity between the two namespaces
-    sudo python3 ip_manager.py ping ns1 10.0.1.2
+    sudo python3 04ipaddressing.py ping ns1 10.0.1.2
 
 Note: assign/up/setup/ping need root privileges (run with sudo).
 """

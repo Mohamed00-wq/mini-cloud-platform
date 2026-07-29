@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-nat_manager.py - Stage 7 of the mini-cloud platform: NAT (Internet access).
+06nat.py - Stage 7 of the mini-cloud platform: NAT (Internet access).
 
 Wraps the commands you'd run manually on the HOST (not inside a namespace):
 
@@ -28,29 +28,29 @@ iptables (default) and nftables as the backend.
 
 Usage:
     # Enable IP forwarding on the host kernel
-    sudo python3 nat_manager.py enable-forwarding
+    sudo python3 06nat.py enable-forwarding
 
     # Add MASQUERADE so a subnet can reach the internet through eth0
-    sudo python3 nat_manager.py masquerade add 10.0.1.0/24 eth0
-    sudo python3 nat_manager.py masquerade add 10.0.2.0/24 eth0
+    sudo python3 06nat.py masquerade add 10.0.1.0/24 eth0
+    sudo python3 06nat.py masquerade add 10.0.2.0/24 eth0
 
     # Allow the FORWARD chain to pass traffic between the router leg and eth0
-    sudo python3 nat_manager.py allow-forward veth-router eth0
+    sudo python3 06nat.py allow-forward veth-router eth0
 
     # Remove a masquerade rule
-    sudo python3 nat_manager.py masquerade remove 10.0.1.0/24 eth0
+    sudo python3 06nat.py masquerade remove 10.0.1.0/24 eth0
 
     # List current NAT rules
-    python3 nat_manager.py masquerade list
+    python3 06nat.py masquerade list
 
     # Use nftables instead of iptables
-    sudo python3 nat_manager.py masquerade add 10.0.1.0/24 eth0 --backend nft
+    sudo python3 06nat.py masquerade add 10.0.1.0/24 eth0 --backend nft
 
     # Test internet access from inside a namespace
-    sudo python3 nat_manager.py test ns1 8.8.8.8
+    sudo python3 06nat.py test ns1 8.8.8.8
 
     # Just redraw the diagram
-    python3 nat_manager.py diagram
+    python3 06nat.py diagram
 
 Note: enable-forwarding/masquerade add|remove/allow-forward/test need root
       privileges (run with sudo).

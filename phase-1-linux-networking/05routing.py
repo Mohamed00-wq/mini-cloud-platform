@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-router_manager.py - Stage 6 of the mini-cloud platform: Routing between two subnets.
+05routing.py - Stage 6 of the mini-cloud platform: Routing between two subnets.
 
 Wraps the commands you used manually:
     sudo ip netns add router
@@ -25,28 +25,28 @@ the routed topology in the terminal.
 
 Usage:
     # 1. Create the router namespace
-    sudo python3 router_manager.py create-router router
+    sudo python3 05routing.py create-router router
 
     # 2. Assign an IP to each interface inside the router (also brings it up)
-    sudo python3 router_manager.py add-interface router eth0 10.0.1.254/24 --subnet 10.0.1.0/24
-    sudo python3 router_manager.py add-interface router eth1 10.0.2.254/24 --subnet 10.0.2.0/24
+    sudo python3 05routing.py add-interface router eth0 10.0.1.254/24 --subnet 10.0.1.0/24
+    sudo python3 05routing.py add-interface router eth1 10.0.2.254/24 --subnet 10.0.2.0/24
 
     # 3. Turn the router into an actual router
-    sudo python3 router_manager.py enable-forwarding router
+    sudo python3 05routing.py enable-forwarding router
 
     # 4. Tell each subnet how to reach the other one, via the router
-    sudo python3 router_manager.py add-route ns1 10.0.2.0/24 10.0.1.254
-    sudo python3 router_manager.py add-route ns2 10.0.1.0/24 10.0.2.254
+    sudo python3 05routing.py add-route ns1 10.0.2.0/24 10.0.1.254
+    sudo python3 05routing.py add-route ns2 10.0.1.0/24 10.0.2.254
 
     # Check routing tables
-    python3 router_manager.py show-routes ns1
-    python3 router_manager.py show-routes router
+    python3 05routing.py show-routes ns1
+    python3 05routing.py show-routes router
 
     # Test end-to-end connectivity
-    sudo python3 router_manager.py ping ns1 10.0.2.1
+    sudo python3 05routing.py ping ns1 10.0.2.1
 
     # Just redraw the diagram from saved state
-    python3 router_manager.py diagram
+    python3 05routing.py diagram
 
 Note: create-router/add-interface/enable-forwarding/add-route/ping need root
       privileges (run with sudo). The interfaces (eth0, eth1) must already

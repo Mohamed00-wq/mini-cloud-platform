@@ -17,22 +17,22 @@ of the current topology in the terminal - no need to ask for it separately.
 
 Usage:
     # Create the bridge and bring it up
-    sudo python3 bridge_manager.py create br0
-    sudo python3 bridge_manager.py up br0
+    sudo python3 02bridge.py create br0
+    sudo python3 02bridge.py up br0
 
     # Attach an interface to the bridge (mention which namespace it belongs
     # to with --namespace so the diagram is meaningful; it's optional)
-    sudo python3 bridge_manager.py attach veth1-br br0 --namespace ns1
-    sudo python3 bridge_manager.py attach veth2-br br0 --namespace ns2
+    sudo python3 02bridge.py attach veth1-br br0 --namespace ns1
+    sudo python3 02bridge.py attach veth2-br br0 --namespace ns2
 
     # Detach an interface from the bridge
-    sudo python3 bridge_manager.py detach veth1-br
+    sudo python3 02bridge.py detach veth1-br
 
     # Show raw bridge info from the kernel
-    python3 bridge_manager.py show br0
+    python3 02bridge.py show br0
 
     # Just (re)draw the diagram from the last known state
-    python3 bridge_manager.py diagram
+    python3 02bridge.py diagram
 
 Note: create/up/attach/detach need root privileges (run with sudo).
 """

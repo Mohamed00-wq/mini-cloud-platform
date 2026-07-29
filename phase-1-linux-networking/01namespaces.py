@@ -9,12 +9,12 @@ Wraps the `ip netns` commands you were running manually:
     sudo ip netns del ns1
 
 Usage:
-    sudo python3 netns_manager.py create ns1
-    python3 netns_manager.py list
-    sudo python3 netns_manager.py exec ns1
-    sudo python3 netns_manager.py exec ns1 -- ping -c 3 8.8.8.8
-    sudo python3 netns_manager.py delete ns1
-    python3 netns_manager.py exists ns1
+    sudo python3 01namespaces.py create ns1
+    python3 01namespaces.py list
+    sudo python3 01namespaces.py exec ns1
+    sudo python3 01namespaces.py exec ns1 -- ping -c 3 8.8.8.8
+    sudo python3 01namespaces.py delete ns1
+    python3 01namespaces.py exists ns1
 
 Note: create/exec/delete need root privileges (run with sudo).
       list/exists work without sudo.

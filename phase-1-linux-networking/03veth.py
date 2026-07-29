@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-veth_manager.py - Stage 2 of the mini-cloud platform: veth pairs.
+03veth.py - Stage 2 of the mini-cloud platform: veth pairs.
 
 Wraps the commands you used manually:
     sudo ip link add veth1 type veth peer name veth2
@@ -9,22 +9,22 @@ Wraps the commands you used manually:
 
 Usage:
     # Create the veth pair (both ends still in the host namespace)
-    sudo python3 veth_manager.py create veth1 veth2
+    sudo python3 03veth.py create veth1 veth2
 
     # Move one end into a namespace
-    sudo python3 veth_manager.py attach veth1 ns1
-    sudo python3 veth_manager.py attach veth2 ns2
+    sudo python3 03veth.py attach veth1 ns1
+    sudo python3 03veth.py attach veth2 ns2
 
     # Or do all three steps in one go
-    sudo python3 veth_manager.py setup veth1 ns1 veth2 ns2
+    sudo python3 03veth.py setup veth1 ns1 veth2 ns2
 
     # List links (on host, or inside a namespace)
-    python3 veth_manager.py list
-    python3 veth_manager.py list --netns ns1
+    python3 03veth.py list
+    python3 03veth.py list --netns ns1
 
     # Delete a veth pair (deleting one end removes its peer too)
-    sudo python3 veth_manager.py delete veth1
-    sudo python3 veth_manager.py delete veth1 --netns ns1
+    sudo python3 03veth.py delete veth1
+    sudo python3 03veth.py delete veth1 --netns ns1
 
 Note: create/attach/setup/delete need root privileges (run with sudo).
 """

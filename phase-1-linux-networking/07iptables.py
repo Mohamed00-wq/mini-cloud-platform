@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-iptables_manager.py
+07iptables.py
 Stage 8 - Linux Firewall (iptables)
 
 Features:
@@ -12,15 +12,15 @@ Features:
 
 Examples:
 
-    sudo python3 iptables_manager.py allow-ping
+    sudo python3 07iptables.py allow-ping
 
-    sudo python3 iptables_manager.py block-ssh
+    sudo python3 07iptables.py block-ssh
 
-    sudo python3 iptables_manager.py allow-ssh
+    sudo python3 07iptables.py allow-ssh
 
-    sudo python3 iptables_manager.py list
+    sudo python3 07iptables.py list
 
-    sudo python3 iptables_manager.py flush
+    sudo python3 07iptables.py flush
 """
 
 import argparse
