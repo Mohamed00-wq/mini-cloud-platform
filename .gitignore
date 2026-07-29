@@ -1,12 +1,48 @@
-*.log
-*.tmp
+# OS
+.DS_Store
+Thumbs.db
 
-.env
-
-__pycache__/
-
+# Editor / IDE
+.vscode/
+.idea/
 *.swp
 
-.vscode/
+# Logs
+*.log
+logs/
 
-.idea/
+# Environment / secrets
+.env
+.env.*
+*.pem
+*.key
+secrets/
+
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.backup
+*.tfvars
+crash.log
+crash.*.log
+
+# Ansible
+*.retry
+
+# Docker
+*.pid
+
+# Python (if used for scripts/automation)
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# VM / QEMU images
+*.qcow2
+*.img
+*.iso
+
+# Build/output
+dist/
+build/
