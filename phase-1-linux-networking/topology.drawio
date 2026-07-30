@@ -1,0 +1,9 @@
+ ns1 (10.0.1.0/24)                          ns2 (10.0.2.0/24)
+      veth1  <----veth pair---->  veth1r   |   veth2r <----veth pair----> veth2
+      10.0.1.1/24                 10.0.1.254/24  10.0.2.254/24            10.0.2.1/24
+                                        \___________router___________/
+                                         (ip_forward=1, routes both ways)
+                                                     |
+                                              Host (NAT, optional)
+                                                     |
+                                                 Internet
