@@ -30,7 +30,7 @@ A practical project to build a miniature cloud platform using Linux Networking, 
 
 **Goal:** Build a complete virtual network inside Linux.
 
-### Phase 2 — Virtual Infrastructure
+### Phase 2 — Virtual VPC
 - Create multiple VMs using KVM/QEMU
 - Router VM
 - Public Subnet
