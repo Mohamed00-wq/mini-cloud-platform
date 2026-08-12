@@ -1,27 +1,35 @@
-# Virtual VPC Lab — Networking Project
+# 🌐 Virtual VPC Lab — On-Prem Networking Simulation
 
-A hands-on simulation of a cloud VPC (subnets, routing, NAT, isolation) built locally using **KVM/QEMU**, **libvirt**, and **virt-manager** on Debian.
+A fully virtualized simulation of a cloud **VPC (Virtual Private Cloud)** — built entirely on-premises using **KVM/QEMU**, **libvirt**, and **virt-manager**, without any cloud provider. This project recreates core cloud networking concepts: subnetting, routing, NAT, network isolation, and security groups, using real Linux networking tools.
 
-## 🎯 Objective
-Recreate core VPC networking concepts — public/private subnets, routing, and NAT — using virtual machines and isolated virtual networks, without relying on any cloud provider.
+> ⚠️ Note the Router VM's public IP is `10.0.1.2`, **not** `10.0.1.1` — this was changed after a real conflict we hit (see Problem #1 in the Full Problem Log).
 
----
+## 🎯 Project Goal
 
-> ⚠️ Note the Router VM's public IP is `10.0.1.2`, **not** `10.0.1.1` — this was changed after a real conflict we hit (see Problem #1 in Full Problem Log).
+Simulate an AWS-style VPC architecture locally to learn:
 
----
+- Public vs private subnet design
+- NAT Gateway behavior
+- Inter-subnet routing via a dedicated router
+- Network isolation and traffic control
+- Security Group simulation via host-based firewalls (ufw)
+- Real-world debugging of virtualized networking
 
 ## 🛠️ Tech Stack
-- **Hypervisor:** KVM / QEMU (`qemu-system-x86` on Debian 13)
-- **Management:** libvirt + virt-manager
-- **Guest OS:** Ubuntu Server
-- **Host OS:** Debian (user: `theriepper`)
 
----
+| Layer | Tool |
+|---|---|
+| Hypervisor | KVM / QEMU (`qemu-system-x86` on Debian 13) |
+| VM Management | libvirt + virt-manager |
+| Guest OS | Ubuntu Server |
+| Host OS | Debian (user: `theriepper`) |
+| Networking | netplan, iptables, IP forwarding |
+| Firewalling | ufw (Security Groups equivalent) |
 
-## ✅ Steps Completed
+## ✅ Setup Steps
 
-# Host Preparation
+### 1. Host Preparation (Debian)
+
 ```bash
 sudo apt install qemu-kvm libvirt-daemon-system virt-manager bridge-utils
 ```
@@ -40,9 +48,8 @@ sudo adduser $USER kvm
 ```
 (log out/in for group changes to apply)
 
----
+### 2. Environment Cleanup
 
-# Environment Cleanup
 Removed pre-existing test VMs:
 ```bash
 virsh destroy <vm-name>
@@ -54,28 +61,30 @@ Removed libvirt's default NAT network (`192.168.122.0/24`):
 sudo virsh net-destroy default
 sudo virsh net-undefine default
 ```
-
 > ⚠️ **Problem encountered:** the `default` network kept reappearing after certain libvirt operations (e.g. after defining new networks or restarting libvirtd).
 > **Fix:** re-run the destroy/undefine commands any time it shows up again in `virsh net-list --all`. There's no permanent one-time fix — libvirt can recreate it on daemon restart if the XML template still exists in `/etc/libvirt/qemu/networks/autostart/`. Check that folder if it keeps returning.
 
----
-
-## 🔜 Remaining Work
-- [ ] Confirm Public VM **cannot** directly reach Private VM (isolation test)
-- [ ] Permanently prevent `default` libvirt network from reappearing
-- [ ] Add `ufw`/`iptables` rules on Public VM and Private VM to simulate **Security Groups**
-  - Public VM: allow SSH (22), HTTP (80) only
-  - Private VM: allow traffic only from Public VM's IP, deny direct internet inbound
-- [ ] Full connectivity test matrix (all combinations)
-- [ ] Final documentation and lessons-learned writeup
-
----
-
 ## 📚 Concepts Demonstrated
+
 - VPC-style network segmentation (public/private subnets)
 - NAT Gateway simulation via a dedicated Router VM
 - IP forwarding and Linux routing
 - Network isolation using libvirt isolated networks (no `<ip>` on bridge)
 - iptables MASQUERADE and stateful FORWARD rules
 - Netplan static IP configuration and cloud-init file conflicts
-- Real-world debugging: IP conflicts, VM power-state issues, and syntax errors
+- Security Groups simulated via `ufw` source-IP restrictions
+- Real-world debugging: IP conflicts, VM power-state issues, syntax errors, and forwarding resets
+
+## 🔜 Remaining Work
+
+- [ ] Final confirmation: Public VM cannot reach Private VM directly (`10.0.2.10`)
+- [ ] Permanently prevent `default` libvirt network from reappearing
+- [ ] Full end-to-end connectivity test matrix re-run after all fixes
+- [ ] Document final lessons learned
+
+## 🖥️ Host Environment
+
+- **Host OS:** Debian
+- **Username:** `theriepper`
+- **Virtualization:** KVM/QEMU + libvirt + virt-manager
+- **Guest OS (all VMs):** Ubuntu Server

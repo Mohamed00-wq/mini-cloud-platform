@@ -1,4 +1,5 @@
-# Router VM Created
+# Router VM
+
 - OS: Ubuntu Server
 - Specs: 1 vCPU, 1 GB RAM, 8–10 GB disk
 - **2 NICs attached:**
@@ -18,28 +19,9 @@ ip a
 | `enp1s0` | `10.0.1.222/24` | Vpc-public |
 | `enp7s0` | `10.0.2.208/24` | Vpc-private |
 
----
+### 4. Static IP Configuration (Netplan) — Router VM
 
-# Static IP Configuration (Netplan) — Router VM
-
-**Original (broken) config** — caused an IP conflict with the `Vpc-public` bridge, which also owns `10.0.1.1`:
-```yaml
-network:
-  version: 2
-  ethernets:
-    enp1s0:
-      dhcp4: no
-      addresses:
-        - 10.0.1.1/24     # ❌ conflicts with libvirt bridge
-    enp7s0:
-      dhcp4: no
-      addresses:
-        - 10.0.2.1/24
-```
-
-> ⚠️ **Problem #1 — IP conflict:** both the `Vpc-public` bridge (host-owned, automatic NAT gateway) and the Router VM's `enp1s0` were assigned `10.0.1.1`. This broke routing and internet access from the Router VM entirely.
-
-**Final corrected config:**
+Edit the **existing** cloud-init netplan file directly (don't create a new one):
 ```yaml
 network:
   version: 2
@@ -58,13 +40,11 @@ network:
       addresses:
         - 10.0.2.1/24
 ```
-
-Applied:
 ```bash
 sudo netplan apply
 ```
 
-> ⚠️ **Problem #2 — netplan file conflict:** after editing and applying, `ip a` still showed the *old* `10.0.1.1/24` address instead of the new `10.0.1.2/24`. Root cause: Ubuntu Server auto-generates `/etc/netplan/50-cloud-init.yaml` via cloud-init on first boot, and edits were made to a different/duplicate netplan file, so the old config kept winning.
+> ⚠️ **Problem encountered:** after editing and applying, `ip a` still showed the *old* `10.0.1.1/24` address instead of the new `10.0.1.2/24`. Root cause: Ubuntu Server auto-generates `/etc/netplan/50-cloud-init.yaml` via cloud-init on first boot, and edits were made to a different/duplicate netplan file, so the old config kept winning.
 > **Fix:**
 > ```bash
 > ls -la /etc/netplan/
@@ -87,9 +67,7 @@ enp1s0: inet 10.0.1.2/24
 enp7s0: inet 10.0.2.1/24
 default via 10.0.1.1 dev enp1s0 proto static
 
----
-
-# IP Forwarding + NAT (Router VM)
+### 5. IP Forwarding + NAT (Router VM)
 
 Enabled forwarding:
 ```bash
@@ -111,13 +89,7 @@ sudo apt install iptables-persistent -y
 sudo netfilter-persistent save
 ```
 
-> ⚠️ **Minor issue encountered:** `sudo iptables -t FORWARD -L -v -n` failed with `table 'FORWARD' does not exist` — this was a syntax mistake (`FORWARD` is a **chain**, not a table).
-> **Fix:** used the correct syntax:
-> ```bash
-> sudo iptables -L FORWARD -v -n
-> ```
-
-Verified (final working state):
+Verify:
 ```bash
 sudo iptables -t nat -L -v -n
 # POSTROUTING: MASQUERADE all -- * enp1s0  10.0.2.0/24  0.0.0.0/0
@@ -126,3 +98,29 @@ sudo iptables -L FORWARD -v -n
 # ACCEPT all -- enp7s0 enp1s0  0.0.0.0/0  0.0.0.0/0
 # ACCEPT all -- enp1s0 enp7s0  0.0.0.0/0  0.0.0.0/0  state RELATED,ESTABLISHED
 ```
+
+> ⚠️ **Minor issue encountered:** `sudo iptables -t FORWARD -L -v -n` failed with `table 'FORWARD' does not exist` — this was a syntax mistake (`FORWARD` is a **chain**, not a table).
+> **Fix:** used the correct syntax:
+> ```bash
+> sudo iptables -L FORWARD -v -n
+> ```
+
+### 8. Routing Verification
+
+On **Public VM** and **Private VM**:
+```bash
+ip route
+```
+Expect Public VM → `default via 10.0.1.1`
+Expect Private VM → `default via 10.0.2.1`
+
+Prove Private VM traffic actually transits the Router VM — on `router-vm`:
+```bash
+sudo apt install tcpdump -y
+sudo tcpdump -i enp7s0 icmp
+```
+Then from `private-vm`:
+```bash
+ping -c 4 8.8.8.8
+```
+ICMP packets should appear in the tcpdump output on router-vm.

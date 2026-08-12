@@ -1,6 +1,8 @@
 # Virtual Networks Created
 
-**Vpc-public** — NAT-enabled network:
+### 3. Virtual Networks
+
+**Vpc-public** — NAT-enabled:
 ```xml
 <network>
   <name>Vpc-public</name>
@@ -14,7 +16,7 @@
 </network>
 ```
 
-**Vpc-private** — Isolated network, **final corrected version** (no `<ip>` block at all):
+**Vpc-private** — fully isolated (no `<ip>` block — only the Router VM owns an address here):
 ```xml
 <network>
   <name>Vpc-private</name>
