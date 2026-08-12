@@ -8,7 +8,8 @@ Features:
     - Block SSH (port 22)
     - Allow SSH
     - List firewall rules
-    - Flush all rules
+    - Flush INPUT rules (scoped to the INPUT chain only, never the
+      whole filter table / NAT rules)
 
 Examples:
 
@@ -29,8 +30,9 @@ import sys
 
 
 def run(cmd):
-    print("[+] " + " ".join(cmd))
-    subprocess.run(cmd, check=True)
+    full = ["sudo"] + cmd
+    print("[+] " + " ".join(full))
+    subprocess.run(full, check=True)
 
 
 def allow_ping():
@@ -85,7 +87,8 @@ def list_rules():
 def flush():
     run([
         "iptables",
-        "-F"
+        "-F",
+        "INPUT"
     ])
 
 

@@ -27,6 +27,7 @@ import sys
 def run_ping(namespace, target, count=2):
 
     cmd = [
+        "sudo",
         "ip",
         "netns",
         "exec",
